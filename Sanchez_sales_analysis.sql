@@ -6,33 +6,33 @@ select * from management; -- To see what territory i am analyzing; South Carolin
 select * from store_locations;  --  Find my terriory storeids; 852-Charleston, 853-Greenville
 
 select  								-- Total revenue in both store in South Carolina
-	min(Transaction_Date) as StartDate,
-    max(Transaction_Date) as EndDate,
-    round(sum(Sale_Amount),2) as TotalRevenue
+	min(Transaction_Date) as StartDate,		-- Earliest transaction date
+    max(Transaction_Date) as EndDate,		-- Lastest transaction date
+    round(sum(Sale_Amount),2) as TotalRevenue	-- total sales amount rounded to 2 decimal places
 from 
 	store_sales
 where
-	Store_ID = 852 or Store_ID = 853;
+	Store_ID in(852,853);		-- my two stores in South Carolina
     
 
 select								-- Month by Month Revenue for South Carolina
-	year(Transaction_Date) as Year,
-    month(Transaction_Date) as Month,
-	round(sum(Sale_Amount),2) as MonthlyRevenue
+	year(Transaction_Date) as Year,		-- Get transaction by year
+    month(Transaction_Date) as Month,	-- Get transaction by month
+	round(sum(Sale_Amount),2) as MonthlyRevenue		-- Total sales amount round to 2 decimal places
 from
 	store_sales
 where
-	Store_ID = 852 or Store_ID = 853
+	Store_ID in(852,853)		-- My two stores in South Carolina
 group by
-	year(Transaction_Date),
-    month(Transaction_Date)
+	year(Transaction_Date),		-- Starts with year
+    month(Transaction_Date)		-- then goes to months of that year
 order by
-	year asc;
+	year asc; -- Earliest transaction year is shown first
     
 
 select									-- Total revenue comparason for South Carolina an the whole South region
-    sum(Sale_Amount) as RegionRevenue,
-	(select
+    sum(Sale_Amount) as RegionRevenue,		-- Total sales revenue for all of the South Region
+	(select		-- Total sales revenue for South Carolina
 		sum(Sale_Amount)
 	from 
 			store_sales
@@ -46,16 +46,41 @@ select									-- Total revenue comparason for South Carolina an the whole South
 as TerritoryRevenue
 from
 	store_sales
-join 
+join 		-- To get sales data for whole south region
 	store_locations 
 on 
 	store_sales.Store_ID = store_locations.StoreId
-where
+where		-- states in the South region
 	State in('Florida','Texas','South Carolina');
     
---  What is the number of transactions per month and average transaction size by product category
--- for the sales territory?
-    
+select										-- Number of transactions by month,avg transaction size by product category
+	year(Transaction_Date) as SalesYear,	-- Sales by year
+    month(Transaction_Date) as SalesMonth,	-- Sales by month
+	Category as ProductCategory,		
+    round(avg(Sale_Amount),2) as AvgTransactionSize,		-- Total avg sale roundd to 2 decimal places
+    Count(*) as TransactionCount		-- total transactions
+	from
+		store_sales
+	join		-- to get product information
+		products
+	on
+		store_sales.Prod_Num = products.ProdNum
+	join		-- To get category information
+		inventory_categories
+	on 
+		products.Categoryid = inventory_categories.Categoryid
+	where		-- My two stores in South Carolina
+		store_sales.Store_ID in(852,853)
+	group by		-- have all the years, months, and product categories togther in the table
+		year(Transaction_Date),
+		month(Transaction_Date),
+        Category
+	order by		-- to show the sales by earliest date
+		SalesYear,
+        SalesMonth,
+        ProductCategory;
+
+		
   
 
     
