@@ -5,7 +5,8 @@ use sample_sales;
 select * from management; -- To see what territory i am analyzing; South Carolina
 select * from store_locations;  --  Find my terriory storeids; 852-Charleston, 853-Greenville
 
-select  								-- Total revenue in both store in South Carolina
+-- Total revenue of both store in South Carolina
+select  								
 	min(Transaction_Date) as StartDate,		-- Earliest transaction date
     max(Transaction_Date) as EndDate,		-- Lastest transaction date
     round(sum(Sale_Amount),2) as TotalRevenue	-- total sales amount rounded to 2 decimal places
@@ -14,8 +15,8 @@ from
 where
 	Store_ID in(852,853);		-- my two stores in South Carolina
     
-
-select								-- Month by Month Revenue for South Carolina
+-- Month by Month Revenue for South Carolina
+select								
 	year(Transaction_Date) as Year,		-- Get transaction by year
     month(Transaction_Date) as Month,	-- Get transaction by month
 	round(sum(Sale_Amount),2) as MonthlyRevenue		-- Total sales amount round to 2 decimal places
@@ -29,8 +30,8 @@ group by
 order by
 	year asc; -- Earliest transaction year is shown first
     
-
-select									-- Total revenue comparason for South Carolina an the whole South region
+-- Total revenue comparason for South Carolina an the whole South region
+select									
     sum(Sale_Amount) as RegionRevenue,		-- Total sales revenue for all of the South Region
 	(select		-- Total sales revenue for South Carolina
 		sum(Sale_Amount)
@@ -53,7 +54,8 @@ on
 where		-- states in the South region
 	State in('Florida','Texas','South Carolina');
     
-select										-- Number of transactions by month,avg transaction size by product category
+-- Number of transactions by month,avg transaction size by product category
+select										
 	year(Transaction_Date) as SalesYear,	-- Sales by year
     month(Transaction_Date) as SalesMonth,	-- Sales by month
 	Category as ProductCategory,		
@@ -79,8 +81,19 @@ select										-- Number of transactions by month,avg transaction size by produ
 		SalesYear,
         SalesMonth,
         ProductCategory;
-
-		
+        
+-- Compare total sales from both stores in South Carolina
+select	
+	sum(Sale_Amount) as TotalSales, -- add up sales totals
+    Store_ID
+from
+	store_sales
+where
+	store_sales.Store_ID in(852,853) -- limit to my stores
+group by
+	store_sales.Store_ID -- separate by store id
+order by
+	TotalSales desc; -- show the largest total first
   
 
     
