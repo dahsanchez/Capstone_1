@@ -94,6 +94,8 @@ group by
 	store_sales.Store_ID -- separate by store id
 order by
 	TotalSales desc; -- show the largest total first
+    
+--  What is your recommendation for where to focus sales attention in the next quarter?
   
 
     
