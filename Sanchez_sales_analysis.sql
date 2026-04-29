@@ -96,8 +96,9 @@ order by
 	TotalSales desc; -- show the largest total first
     
 --  What is your recommendation for where to focus sales attention in the next quarter?
+  /* My recommendations for where to focus sales attention for the next quarter is to focus on stationery and supplies sales.
+  Overall the sales in that product category are low, even though that category has the highest number of transactions. We could offer more advertising for our stationery and supplies, as well as hold promotions for that category. The Greenville store brought in $25,191.44 more in revenue then Charleston store. We can doo more advertising for the Charleston store to bring in more customers. */
   
-
     
 
 	
